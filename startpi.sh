@@ -27,6 +27,8 @@ mkdir /etc/startpi/backups
 mkdir /etc/startpi/backups/host
 
 
+
+
 { if
 (whiptail --title "Langage" --yes-button "No" --no-button "Yes" --yesno "Use French Version ? " 10 80)
 then
@@ -353,10 +355,6 @@ echo "SSH Sécurisé !"
 fi }
 
 
-
-fi }
-
-
 { if
 (whiptail --title "ChangeHostName" --yes-button "Non" --no-button "Oui" --yesno "Changer le nom de la raspberry ?" 10 80)
 then
@@ -381,7 +379,6 @@ fi }
 echo "Programme terminé. Merci d' avoir utilisé StartPi par @zonguin !"
 
 
-fi }
 
 { if
 (whiptail --title "NodeUpdate" --yes-button "Non" --no-button "Oui" --yesno "Mettre à jour nodejs (Recommandé pour de nombreux bots) ?" 10 80)
@@ -488,7 +485,7 @@ echo "Installation effectuée !"
 
 fi }
 
-
+fi }
 
 
 ################################################################

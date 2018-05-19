@@ -32,7 +32,10 @@ StartPi est un script qui permet de configurer, de sécuriser et de booster votr
 
 ### Installation :
 
-curl -sSL https://raw.githubusercontent.com/ZongUin/StartPi/master/startpi.sh | bash
+
+<code>
+    curl -sSL https://raw.githubusercontent.com/ZongUin/StartPi/master/startpi.sh | bash
+</code>
 
 ------
 
