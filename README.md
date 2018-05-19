@@ -30,6 +30,12 @@ StartPi est un script qui permet de configurer, de sécuriser et de booster votr
 
 ------
 
+### Installation :
+
+curl -sSL https://raw.githubusercontent.com/ZongUin/StartPi/master/startpi.sh | bash
+
+------
+
 StartPi is a script that allows you to configure, secure and boost your Raspberry Pi in a few clicks.
 
 ### It allows for the moment to :
