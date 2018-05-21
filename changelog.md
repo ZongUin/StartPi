@@ -14,3 +14,9 @@
         - Added DelGraphic : Remove automaticaly some useless packets (graphical packets)
         - Added usbmount : Automatically install usbmount
 
+## V Alpha-0.21
+
+- More English Support
+- English version commented
+- Added .gitignore file
+
