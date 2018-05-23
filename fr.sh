@@ -203,7 +203,8 @@ echo "nettoyage effectué !"
 
 fi }
 
-whiptail --title "partie Utilitaires" --yes-button "Non" --no-button "Oui" --yesno "Vous entrez dans la partie [Installation d' utilitaires] ?" 10 80
+whiptail --msgbox "Let's change pihole password" 10 80 1
+
 { if
 (whiptail --title "usbmount" --yes-button "Non" --no-button "Oui" --yesno "Installer usbmount pour monter/démonter automatiquement les périphériques USB au branchement ?" 10 80)
 then
@@ -220,6 +221,119 @@ echo "Installation effectuée !"
 
 fi }
 
+whiptail --msgbox "Vous allez entrer dans la partie [Installation d' utilitaires] " 10 80 1
+
+{ if
+(whiptail --title "pihole" --yes-button "Non" --no-button "Oui" --yesno "Installer pihole - Un serveur dns pour bloquer les publicités ?" 10 80)
+then
+echo "$CURRENTUSER n' a pas activé pihole" | sudo tee --append /etc/startpi/log.txt
+else
+echo "$CURRENTUSER a activé pihole" | sudo tee --append /etc/startpi/log.txt
+
+echo "Installation..."
+
+curl -sSL https://install.pi-hole.net | bash
+
+echo "Installation effectuée !"
+
+whiptail --msgbox "Accédez à l' interfaçe pi-hole sur http://ip-de-votre-rpi/admin  " 10 80 1
+
+    { if
+    (whiptail --title "piholedns" --yes-button "Non" --no-button "Oui" --yesno "Installer Pi-hole comme un serveur DNS (ne redirigera pas les requêtes vers un DNS public - Meilleure vie privée) ?" 10 80)
+    then
+    echo "$CURRENTUSER n' a pas activé piholedns" | sudo tee --append /etc/startpi/log.txt
+    else
+    echo "$CURRENTUSER a activé piholedns" | sudo tee --append /etc/startpi/log.txt
+
+    echo "Installation..."
+
+    sudo apt install unbound
+    wget https://www.internic.net/domain/named.root -O /var/lib/unbound/root.hints
+    sudo service unbound start
+    echo "Installation effectuée !"
+    whiptail --msgbox "Vous devriez aller sur https://docs.pi-hole.net/guides/unbound/ pour vous renseigner davantage  " 10 80 1
+
+
+    fi }
+
+{ if
+    (whiptail --title "piholedns" --yes-button "Non" --no-button "Oui" --yesno "Changer le mot de passe de pi-hole pour plus de sécurité ?" 10 80)
+    then
+    echo "$CURRENTUSER n' a pas activé piholedns" | sudo tee --append /etc/startpi/log.txt
+    else
+    echo "$CURRENTUSER a activé piholedns" | sudo tee --append /etc/startpi/log.txt
+
+    echo "Chargement..."
+
+    NEW_PASS=$(whiptail --inputbox "Entrez le mot de passe" 10 80 "" 3>&1 1>&2 2>&3)
+pihole -a -p $NEW_PASS
+    echo "Fait !"
+
+
+    fi }
+
+fi }
+
+
+{ if
+(whiptail --title "pyload" --yes-button "Non" --no-button "Oui" --yesno "Installer pyload - Un serveur de téléchargement ?" 10 80)
+then
+echo "$CURRENTUSER n' a pas activé pyload" | sudo tee --append /etc/startpi/log.txt
+else
+echo "$CURRENTUSER a activé pyload" | sudo tee --append /etc/startpi/log.txt
+
+echo "Installation..."
+
+sudo apt-get install python-support python-crypto python-pycurl tesseract-ocr tesseract-ocr-eng python-imaging python-pip python-dev pyopenssl rhino -y
+sudo apt-get install libmozjs-24-bin
+cd /usr/bin
+ln -s js24 js
+cp /etc/apt/sources.list /etc/startpi/backups/sources.list
+sed -i "$ a deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi" /etc/apt/sources.list
+sed -i "$ a deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi" /etc/apt/sources.list
+sudo apt-get update
+sudo apt-get -y install git liblept4 python python-crypto python-pycurl python-imaging tesseract-ocr zip unzip python-openssl libmozjs-24-bin
+wget http://ftp.fr.debian.org/debian/pool/main/g/gcc-6/gcc-6-base_6.3.0-18+deb9u1_armhf.deb
+dpkg -i gcc-6-base_6.3.0-18+deb9u1_armhf.deb
+rm gcc-6-base_6.3.0-18+deb9u1_armhf.deb
+wget http://ftp.fr.debian.org/debian/pool/main/g/gcc-6/libgcc1_6.3.0-18+deb9u1_armhf.deb
+dpkg -i libgcc1_6.3.0-18+deb9u1_armhf.deb
+rm libgcc1_6.3.0-18+deb9u1_armhf.deb
+wget http://ftp.fr.debian.org/debian/pool/main/g/gcc-6/libstdc++6_6.3.0-18+deb9u1_armhf.deb
+dpkg -i libstdc++6_6.3.0-18+deb9u1_armhf.deb
+rm libstdc++6_6.3.0-18+deb9u1_armhf.deb
+wget http://ftp.fr.debian.org/debian/pool/main/g/glibc/libc6_2.24-11+deb9u3_armhf.deb
+dpkg -i libc6_2.24-11+deb9u3_armhf.deb
+rm libc6_2.24-11+deb9u3_armhf.deb
+wget http://ftp.fr.debian.org/debian/pool/non-free/u/unrar-nonfree/unrar_5.3.2-1+deb9u1_armhf.deb
+dpkg -i unrar_5.3.2-1+deb9u1_armhf.deb
+rm unrar_5.3.2-1+deb9u1_armhf.deb
+sudo apt-get -y build-dep rar unrar-nonfree
+sudo apt-get source -b unrar-nonfree
+sudo dpkg -i unrar_*_armhf.deb
+sudo rm -rf unrar-*
+sudo adduser --system pyload
+cd /opt
+sudo git clone -b stable https://github.com/pyload/pyload.git
+cd pyload
+whiptail --msgbox "Vous allez ici configurer pyload  " 10 80 1
+sudo -u pyload python pyLoadCore.py
+sudo echo """[Unit]
+Description=Python Downloader
+After=network.target
+
+[Service]
+User=pyload
+ExecStart=/usr/bin/python /opt/pyload/pyLoadCore.py
+
+[Install]
+WantedBy=multi-user.target""" > /etc/systemd/system/pyload.service
+sudo systemctl enable pyload.service
+sudo service pyload restart
+echo "Installation effectuée !"
+
+
+fi }
 
 ################################################################
 ##                   Stopped French Version.                  ##
