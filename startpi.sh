@@ -16,7 +16,7 @@ RESET="\033[0m"
 
 { if
 which whiptail >/dev/null;
-thenre
+then
 :
 else
 sudo apt-get install -y whiptail # install whiptail to create menus
