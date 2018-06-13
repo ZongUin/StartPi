@@ -27,6 +27,8 @@ sudo -l > /dev/null # Verify the user has permissions
 CURRENTUSER="$(whoami)"
 # This get the username of the user
 
+git clone https://github.com/ZongUin/StartPi
+cd StartPi
 mkdir /etc/startpi # create startpi folders
 mkdir /etc/startpi/backups
 mkdir /etc/startpi/backups/host
